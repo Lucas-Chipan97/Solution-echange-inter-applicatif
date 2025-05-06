@@ -1,0 +1,30 @@
+[
+    {
+      "id": 1,
+      "nom": "Olive",
+      "equipe": "New Team",
+      "position": "Attaquant",
+      "competence": "Coup du faucon"
+    },
+    {
+      "id": 2,
+      "nom": "Tom",
+      "equipe": "New Team",
+      "position": "Gardien",
+      "competence": "Arrêt stellaire"
+    },
+    {
+      "id": 3,
+      "nom": "Mark Landers",
+      "equipe": "Toho Academy",
+      "position": "Attaquant",
+      "competence": "Tir du Tigre"
+    },
+    {
+      "id": 4,
+      "nom": "Bruce Harper",
+      "equipe": "New Team",
+      "position": "Défenseur",
+      "competence": "Tacle glissé"
+    }
+  ]
