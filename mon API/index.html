@@ -3,39 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Test CORS - API Manga</title>
+    <title>Test CORS Simple</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             max-width: 800px;
             margin: 0 auto;
             padding: 20px;
-            line-height: 1.6;
-        }
-        h1 {
-            color: #333;
-            border-bottom: 2px solid #eee;
-            padding-bottom: 10px;
         }
         button {
             background-color: #4CAF50;
-            border: none;
             color: white;
-            padding: 10px 20px;
-            text-align: center;
-            text-decoration: none;
-            display: inline-block;
-            font-size: 16px;
-            margin: 10px 5px;
-            cursor: pointer;
+            padding: 10px 15px;
+            border: none;
             border-radius: 4px;
-        }
-        button:hover {
-            background-color: #45a049;
-        }
-        .error {
-            color: red;
-            font-weight: bold;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 10px 0;
         }
         pre {
             background-color: #f5f5f5;
@@ -43,111 +27,88 @@
             border-radius: 5px;
             overflow-x: auto;
         }
-        .input-group {
-            margin: 15px 0;
-        }
-        label {
-            display: block;
-            margin-bottom: 5px;
-        }
-        input[type="text"] {
-            padding: 8px;
-            width: 300px;
+        .error {
+            color: red;
+            font-weight: bold;
         }
     </style>
 </head>
 <body>
-    <h1>Test CORS - API Manga</h1>
+    <h1>Test CORS Simple</h1>
     
     <div>
-        <h2>Requêtes API</h2>
-        <p>Ces boutons vont tester si votre API accepte les requêtes cross-origin (CORS).</p>
-        
-        <button id="getAllBtn">Récupérer tous les personnages</button>
-        <button id="getOneBtn">Récupérer le personnage avec ID 1</button>
-        
-        <div class="input-group">
-            <label for="tokenInput">Token pour endpoints sécurisés:</label>
-            <input type="text" id="tokenInput" value="manga_api_secret_2025">
-        </div>
-        
-        <button id="getStatsBtn">Récupérer les stats d'équipe (requiert token)</button>
+        <p>Cliquez sur le bouton pour tester CORS avec votre API</p>
+        <button id="testBtn">Tester CORS</button>
     </div>
     
     <div>
+        <h2>Journal des actions</h2>
+        <pre id="log">Les actions et résultats s'afficheront ici...</pre>
+    </div>
+
+    <div>
         <h2>Résultat</h2>
-        <pre id="result">Les résultats s'afficheront ici...</pre>
+        <pre id="result">Le résultat s'affichera ici...</pre>
     </div>
     
     <script>
-        // Configuration
-        const API_URL = 'http://localhost:8000';
-        
         // Éléments DOM
-        const getAllBtn = document.getElementById('getAllBtn');
-        const getOneBtn = document.getElementById('getOneBtn');
-        const getStatsBtn = document.getElementById('getStatsBtn');
-        const tokenInput = document.getElementById('tokenInput');
+        const testBtn = document.getElementById('testBtn');
+        const logOutput = document.getElementById('log');
         const resultOutput = document.getElementById('result');
         
-        // Fonction pour afficher les résultats ou les erreurs
+        // Fonction pour ajouter une entrée au journal
+        function log(message) {
+            const timestamp = new Date().toLocaleTimeString();
+            logOutput.textContent += `[${timestamp}] ${message}\n`;
+            logOutput.scrollTop = logOutput.scrollHeight;
+        }
+        
+        // Fonction pour afficher le résultat
         function displayResult(data) {
             resultOutput.textContent = typeof data === 'string' 
                 ? data 
                 : JSON.stringify(data, null, 2);
         }
         
-        // Requête pour récupérer tous les personnages
-        getAllBtn.addEventListener('click', async () => {
+        // Test de l'API
+        testBtn.addEventListener('click', async () => {
+            log('Test démarré');
+            
             try {
-                const response = await fetch(`${API_URL}/personnages`);
-                if (!response.ok) {
-                    throw new Error(`Erreur HTTP: ${response.status}`);
-                }
-                const data = await response.json();
-                displayResult(data);
-            } catch (error) {
-                displayResult(`Erreur: ${error.message}\n\nSi vous voyez une erreur CORS, cela signifie que votre API n'est pas correctement configurée pour accepter les requêtes cross-origin.`);
-            }
-        });
-        
-        // Requête pour récupérer un personnage spécifique
-        getOneBtn.addEventListener('click', async () => {
-            try {
-                const response = await fetch(`${API_URL}/personnages/1`);
-                if (!response.ok) {
-                    throw new Error(`Erreur HTTP: ${response.status}`);
-                }
-                const data = await response.json();
-                displayResult(data);
-            } catch (error) {
-                displayResult(`Erreur: ${error.message}\n\nSi vous voyez une erreur CORS, cela signifie que votre API n'est pas correctement configurée pour accepter les requêtes cross-origin.`);
-            }
-        });
-        
-        // Requête pour récupérer les stats (endpoint sécurisé)
-        getStatsBtn.addEventListener('click', async () => {
-            try {
-                const token = tokenInput.value;
-                const response = await fetch(`${API_URL}/personnages/stats/equipe`, {
+                log('Envoi de la requête à http://localhost:8000/personnages');
+                
+                const response = await fetch('http://localhost:8000/personnages', {
+                    method: 'GET',
                     headers: {
-                        'token': token
+                        'Accept': 'application/json'
                     }
                 });
                 
+                log(`Statut de la réponse: ${response.status}`);
+                
                 if (!response.ok) {
-                    if (response.status === 401) {
-                        throw new Error('Token d\'authentification invalide');
-                    }
                     throw new Error(`Erreur HTTP: ${response.status}`);
                 }
                 
                 const data = await response.json();
+                log('Données reçues avec succès');
                 displayResult(data);
+                
             } catch (error) {
-                displayResult(`Erreur: ${error.message}\n\nSi vous voyez une erreur CORS, cela signifie que votre API n'est pas correctement configurée pour accepter les requêtes cross-origin.`);
+                log(`ERREUR: ${error.message}`);
+                displayResult(`Une erreur s'est produite: ${error.message}`);
+                
+                // Afficher des informations supplémentaires pour le débogage
+                if (error.message.includes('Failed to fetch')) {
+                    log('CONSEIL: Cette erreur peut indiquer un problème CORS ou que l\'API n\'est pas en cours d\'exécution.');
+                    log('Vérifiez la console du navigateur (F12) pour plus de détails.');
+                }
             }
         });
+        
+        // Message initial
+        log('Page chargée. Prêt à tester.');
     </script>
 </body>
 </html>

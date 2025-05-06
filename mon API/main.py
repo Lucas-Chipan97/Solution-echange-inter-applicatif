@@ -1,9 +1,21 @@
 from fastapi import FastAPI, Header, HTTPException
+from fastapi.middleware.cors import CORSMiddleware
 import json
 import os
 
 # Initialiser l'application
 app = FastAPI(title="API de personnages de manga")
+
+# Configuration CORS - Version très permissive pour le développement
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],  # Autorise TOUTES les origines
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+# Reste du code...
 
 # Chemin du fichier de données
 chemin_fichier = os.path.join(os.path.dirname(__file__), "personnages.json")
