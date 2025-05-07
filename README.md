@@ -13,7 +13,7 @@ API REST développée avec FastAPI pour gérer des personnages de manga, leurs s
 
 ```bash
 # Cloner le dépôt
-git clone https://github.com/votre-utilisateur/api-manga.git
+git clone https://github.com/Lucas-Chipan97/Solution-echange-inter-applicatif
 cd api-manga
 
 # Installer les dépendances
